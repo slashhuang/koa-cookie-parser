@@ -5,18 +5,24 @@
 const crypto = require('crypto');
 
 /*加密*/
-exports.U_cipher=(data)=>{
+const U_cipher=key=>data=>{
     let cipher = crypto.createCipher('aes192', 'iwjw-rent-platform');
     return cipher.update(data.toString(),'utf8', 'hex') +  cipher.final('hex')
 }
 /*解密*/
-exports.U_decipher=(data)=>{
+const U_decipher=key=>data=>{
     let decipher = crypto.createDecipher('aes192', 'iwjw-rent-platform')
     try{
         let decipherData =  decipher.update(data,'hex','utf8') + decipher.final('utf8');
         return decipherData
     }catch(e){
         return false
+    }
+};
+module.exports = (key)=>{
+    return {
+        U_cipher:U_cipher(key),
+        U_decipher:U_decipher(key)
     }
 }
 

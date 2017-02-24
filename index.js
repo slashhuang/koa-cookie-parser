@@ -2,11 +2,15 @@
  * built by slashhuang
  * cookie parser
  */
-import { U_decipher,U_cipher }  from './util';
-
+let CipherUtil = require('./util')
 module.exports =(option)=>{
-    let {cookieNameList} = option;
-    let maxAge = 60*60*24;
+    let {
+        cookieNameList,
+        cipherKey,
+        maxAge
+    } = option;
+    maxAge = maxAge || 60*60*2;
+    let { U_decipher,U_cipher } = CipherUtil(cipherKey)
     return (ctx, next)=>{
         ctx.cookie_decoder={
             cookieList:cookieNameList,
@@ -66,8 +70,6 @@ module.exports =(option)=>{
                     let cookieArr = cookieList.map((cookie,index)=>{
                         return ctx.cookie_decoder.cookieTemp(cookie,ctx.cookies.get(cookie))
                     })
-                                        console.log(cookieArr)
-
                     ctx.set('Set-Cookie',cookieArr);
                 })
                 .catch(()=>ctx.cookie_decoder.certificate = false)
